@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cafe_simeona/pages/current_order_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -58,22 +58,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void updateTotal() {
-    total = currentOrder.fold(
-        0.0, (sum, item) => sum + (item['price'] * item['quantity']));
+  void updateTotal() {    
+    setState(() {
+      total = currentOrder.fold(
+          0.0, (sum, item) => sum + (item['price'] * item['quantity']));
+    });
   }
 
-  void _navigateToCurrentOrderPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CurrentOrderPage(
-          currentOrder: currentOrder,
-          total: total,
-          clearOrder: clearOrder,
-        ),
-      ),
-    );
+  void _navigateToCurrentOrderPage() async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CurrentOrderPage(
+                currentOrder: currentOrder,
+                total: total,
+                clearOrder: clearOrder)));
+
+    if (result != null) {
+      setState(() {
+        currentOrder = result['order'];
+        total = result['total'];
+      });
+    }
   }
 
   @override
