@@ -1,0 +1,2 @@
+C:/dev/cafe_simeona/android/app/.cxx/Debug/q4l4e1s6/x86_64/CMakeFiles/edit_cache.dir
+C:/dev/cafe_simeona/android/app/.cxx/Debug/q4l4e1s6/x86_64/CMakeFiles/rebuild_cache.dir
