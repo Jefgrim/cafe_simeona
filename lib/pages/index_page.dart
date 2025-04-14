@@ -1,3 +1,4 @@
+import 'package:cafe_simeona/pages/dining_table_page.dart';
 import 'package:cafe_simeona/pages/home_page.dart';
 import 'package:cafe_simeona/pages/orders_page.dart';
 import 'package:cafe_simeona/pages/sales_page.dart';
@@ -18,7 +19,7 @@ class _IndexPageState extends State<IndexPage> {
     });
   }
 
-  final List _pages = [HomePage(), SalesPage(), OrdersPage()];
+  final List _pages = [HomePage(), SalesPage(), OrdersPage(), DiningTablePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class _IndexPageState extends State<IndexPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _navigateBottomBar,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
@@ -34,6 +36,7 @@ class _IndexPageState extends State<IndexPage> {
             label: 'Sales',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Orders'),
+          BottomNavigationBarItem(icon: Icon(Icons.table_restaurant), label: 'Tables'),
         ],
       ),
     );
