@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cafe_simeona/pages/current_order_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,7 +24,6 @@ class _HomePageState extends State<HomePage> {
 
   List<Map<String, dynamic>> currentOrder = [];
   double total = 0.0;
-  bool isOrderExpanded = false;
 
   void addItemToOrder(Map<String, dynamic> item) {
     setState(() {
@@ -63,10 +63,17 @@ class _HomePageState extends State<HomePage> {
         0.0, (sum, item) => sum + (item['price'] * item['quantity']));
   }
 
-  void toggleOrderVisibility() {
-    setState(() {
-      isOrderExpanded = !isOrderExpanded;
-    });
+  void _navigateToCurrentOrderPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CurrentOrderPage(
+          currentOrder: currentOrder,
+          total: total,
+          clearOrder: clearOrder,
+        ),
+      ),
+    );
   }
 
   @override
@@ -109,64 +116,24 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           GestureDetector(
-            onTap: toggleOrderVisibility,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: isOrderExpanded ? MediaQuery.of(context).size.height - AppBar().preferredSize.height - kBottomNavigationBarHeight : 60,
-              padding: const EdgeInsets.all(10),
+            onTap: _navigateToCurrentOrderPage,
+            child: Container(
+              height: 60,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 border: Border.all(color: Colors.grey),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Current Order', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      Text('Total: ₱${total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  if (isOrderExpanded)
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: currentOrder.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                                '${currentOrder[index]['name']} x ${currentOrder[index]['quantity']}'),
-                            trailing: Text(
-                                '₱${(currentOrder[index]['price'] * currentOrder[index]['quantity']).toStringAsFixed(2)}'),
-                          );
-                        },
-                      ),
-                    ),
-                  if (isOrderExpanded)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: clearOrder,
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.brown, foregroundColor: Colors.white),
-                          child: const Text('Clear'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Implement checkout logic
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Checkout successful! (Not really)')),
-                            );
-                            clearOrder();
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.brown, foregroundColor: Colors.white),
-                          child: const Text('Checkout'),
-                        ),
-                      ],
-                    ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Current Order',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text('Total: ₱${total.toStringAsFixed(2)}',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
             ),
           ),
